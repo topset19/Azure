@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PeikkoPrecastWallDesigner.Domain\PeikkoPrecastWallDesigner.Domain.csproj" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Interfaces\" />
+    <Folder Include="Common\Services\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <RootNamespace>PeikkoPrecastWallDesigner.Application</RootNamespace>
+    <AssemblyName>PeikkoPrecastWallDesigner.Application</AssemblyName>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
