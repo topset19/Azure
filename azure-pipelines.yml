@@ -12,7 +12,7 @@ pool:
 # Working Directory
 variables:
   ENVIRONMENT: dev
-  azureprojectname: "PeikkoPrecastWallDesigner"  # This is the name of the project in Azure
+  azureprojectname: "pwd-backend"  # This is the name of the project in Azure
   projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"  # Add project .csproj file name here
   projectName: "pwd-backend"  # Add project name here
   workingDirectory: "$(System.DefaultWorkingDirectory)/src"  # Change project name according to folder structure
