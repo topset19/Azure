@@ -16,6 +16,12 @@ namespace PeikkoPrecastWallDesigner.Controllers
 			_compAppService = computeAppService;
         }
 
+		[HttpGet("test")]
+		public async Task<IActionResult> TestEndpoint()
+		{
+			return Ok("Success");
+		}
+
 		[HttpPost("loads")]
 		public async Task<IActionResult> ComputeLayerLoads([FromBody] LayersDto model)
 		{
