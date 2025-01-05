@@ -15,7 +15,7 @@ variables:
   azureprojectname: "PeikkoPrecastWallDesigner"  # This is the name of the project in Azure
   projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"  # Add project .csproj file name here
   projectName: "pwd-backend"  # Add project name here
-  workingDirectory: "$(System.DefaultWorkingDirectory)/$(projectName)/src"  # Change project name according to folder structure
+  workingDirectory: "$(System.DefaultWorkingDirectory)/src"  # Change project name according to folder structure
   buildConfiguration: "Release"
   name: $(Date:yyyyMMdd)$(Rev:.r)
   resourceGroupName: "$(azureProjectName)-$(ENVIRONMENT)-rg"
@@ -25,14 +25,6 @@ steps:
   # List the contents of the working directory
   - script: dir "$(System.DefaultWorkingDirectory)"
     displayName: "List files in working directory"
-
-  # List the contents of the project folder
-#   - script: dir "$(System.DefaultWorkingDirectory)/$(projFileName)"
-    # displayName: "List contents of the project folder"
-
-  # Echo the working directory for debugging
-#   - script: echo $(workingDirectory)
-    # displayName: "Show working directory"
 
   # Install .NET SDK
   - task: UseDotNet@2
