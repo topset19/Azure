@@ -24,14 +24,11 @@ variables:
 steps:
   # Restore NuGet Packages
   - script: dir "$(workingDirectory)"
-    displayName: "List files in working directory"
 
   - script: dir "$(workingDirectory)/$(projFileName)"
-    displayName: "List contents of the project folder"
 
   - script: echo $(workingDirectory)
-    displayName: "Show working directory"
-	
+
   - task: UseDotNet@2
     displayName: 'Install .NET SDK 9'
     inputs:
