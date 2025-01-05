@@ -22,9 +22,6 @@ variables:
   webAppName: "$(azureProjectName)-$(ENVIRONMENT)-webapp"
 
 steps:
-  - script: dir "$(workingDirectory)"
-    displayName: "List files in $(workingDirectory)"
-
   # Restore NuGet Packages
   - task: UseDotNet@2
     displayName: 'Install .NET SDK 9'
