@@ -24,6 +24,14 @@ variables:
 steps:
 
   # Restore NuGet Packages
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK 3.1'
+    inputs:
+      packageType: 'sdk'
+      version: '3.1.x'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+	  arguments: "--verbosity detailed"
+	  includePreviewVersions: true
   - task: DotNetCoreCLI@2
     displayName: "dotnet restore"
     inputs:
