@@ -12,23 +12,29 @@ pool:
 # Working Directory
 variables:
   ENVIRONMENT: dev
-  azureprojectname: "PeikkoPrecastWallDesigner" #this is the name of the project in azure
-  projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj" #Add project .csproj file name here
-  projectName: "pwd-backend" #add project name here
-  workingDirectory: "$(System.DefaultWorkingDirectory)/$(projectName)/src" #change project name according to folder structure
+  azureprojectname: "PeikkoPrecastWallDesigner"  # This is the name of the project in Azure
+  projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"  # Add project .csproj file name here
+  projectName: "pwd-backend"  # Add project name here
+  workingDirectory: "$(System.DefaultWorkingDirectory)/$(projectName)/src"  # Change project name according to folder structure
   buildConfiguration: "Release"
   name: $(Date:yyyyMMdd)$(Rev:.r)
   resourceGroupName: "$(azureProjectName)-$(ENVIRONMENT)-rg"
   webAppName: "$(azureProjectName)-$(ENVIRONMENT)-webapp"
 
 steps:
-  # Restore NuGet Packages
+  # List the contents of the working directory
   - script: dir "$(workingDirectory)"
+    displayName: "List files in working directory"
 
+  # List the contents of the project folder
   - script: dir "$(workingDirectory)/$(projFileName)"
+    displayName: "List contents of the project folder"
 
+  # Echo the working directory for debugging
   - script: echo $(workingDirectory)
+    displayName: "Show working directory"
 
+  # Install .NET SDK
   - task: UseDotNet@2
     displayName: 'Install .NET SDK 9'
     inputs:
@@ -38,13 +44,14 @@ steps:
       arguments: "--verbosity detailed"
       includePreviewVersions: true
 
+  # Restore NuGet Packages
   - task: DotNetCoreCLI@2
     displayName: "dotnet restore"
     inputs:
       command: "restore"
       projects: "**/*.csproj"
       feedsToUse: "select"
-    #   vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"
+    # vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"  # Uncomment if using a specific feed
 
   # Build All Projects
   - task: DotNetCoreCLI@2
@@ -63,12 +70,14 @@ steps:
       projects: "$(workingDirectory)/$(projFileName)"
       arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureprojectname)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed --no-restore"
 
+  # Publish Build Artifacts
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureprojectname)_$(ENVIRONMENT)_$(Build.BuildNumber)"
       ArtifactName: "$(azureprojectname)_LatestBuild"
       publishLocation: "Container"
 
+  # Deploy to Azure WebApp
   - task: AzureRmWebAppDeployment@4
     inputs:
       ConnectionType: "AzureRM"
@@ -78,4 +87,3 @@ steps:
       appType: "webApp"
       WebAppName: "$(webAppName)"
       packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
-
