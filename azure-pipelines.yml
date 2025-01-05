@@ -30,8 +30,8 @@ steps:
       packageType: 'sdk'
       version: '3.1.x'
       installationPath: $(Agent.ToolsDirectory)/dotnet
-	  arguments: "--verbosity detailed"
-	  includePreviewVersions: true
+      arguments: "--verbosity detailed"
+      includePreviewVersions: true
   - task: DotNetCoreCLI@2
     displayName: "dotnet restore"
     inputs:
