@@ -25,7 +25,7 @@ steps:
 
   # Restore NuGet Packages
   - task: UseDotNet@2
-    displayName: 'Install .NET SDK 3.1'
+    displayName: 'Install .NET SDK 9'
     inputs:
       packageType: 'sdk'
       version: '9.x'
@@ -38,7 +38,7 @@ steps:
       command: "restore"
       projects: "**/*.csproj"
       feedsToUse: "select"
-      vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"
+    #   vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"
 
   # Build All Projects
   - task: DotNetCoreCLI@2
