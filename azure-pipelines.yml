@@ -23,16 +23,16 @@ variables:
 
 steps:
   # List the contents of the working directory
-  - script: dir "$(workingDirectory)"
+  - script: dir "$(System.DefaultWorkingDirectory)"
     displayName: "List files in working directory"
 
   # List the contents of the project folder
-  - script: dir "$(workingDirectory)/$(projFileName)"
-    displayName: "List contents of the project folder"
+#   - script: dir "$(System.DefaultWorkingDirectory)/$(projFileName)"
+    # displayName: "List contents of the project folder"
 
   # Echo the working directory for debugging
-  - script: echo $(workingDirectory)
-    displayName: "Show working directory"
+#   - script: echo $(workingDirectory)
+    # displayName: "Show working directory"
 
   # Install .NET SDK
   - task: UseDotNet@2
