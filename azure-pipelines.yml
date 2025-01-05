@@ -13,7 +13,7 @@ pool:
 variables:
   ENVIRONMENT: dev
   azureprojectname: "PeikkoPrecastWallDesigner" #this is the name of the project in azure
-  projFileName: "PeikkoPrecastWallDesigner.Api.csproj" #Add project .csproj file name here
+  projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj" #Add project .csproj file name here
   projectName: "pwd-backend" #add project name here
   workingDirectory: "$(System.DefaultWorkingDirectory)/$(projectName)/src" #change project name according to folder structure
   buildConfiguration: "Release"
@@ -22,6 +22,8 @@ variables:
   webAppName: "$(azureProjectName)-$(ENVIRONMENT)-webapp"
 
 steps:
+  - script: dir "$(workingDirectory)"
+    displayName: "List files in $(workingDirectory)"
 
   # Restore NuGet Packages
   - task: UseDotNet@2
@@ -32,6 +34,7 @@ steps:
       installationPath: $(Agent.ToolsDirectory)/dotnet
       arguments: "--verbosity detailed"
       includePreviewVersions: true
+
   - task: DotNetCoreCLI@2
     displayName: "dotnet restore"
     inputs:
