@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Amqp.Framing;
 using PeikkoPrecastWallDesigner.Application.Common.DTOs;
 using PeikkoPrecastWallDesigner.Application.Computations.Mappers;
-using PeikkoPrecastWallDesigner.Domain.Entities;
 using PeikkoPrecastWallDesigner.Domain.Enums;
 using PeikkoPrecastWallDesigner.Domain.Exceptions;
-using PeikkoPrecastWallDesigner.Domain.Service.Computations;
 using PeikkoPrecastWallDesigner.Domain.Services.Computations;
 
 
