@@ -9,9 +9,9 @@ namespace PeikkoPrecastWallDesigner.Controllers
     [ApiController]
     public class ComputationController : ControllerBase
     {
-        private readonly ComputingAService _compAppService;
+        private readonly IComputingAService _compAppService;
 
-        public ComputationController(ComputingAService computeAppService)
+        public ComputationController(IComputingAService computeAppService)
         {
 			_compAppService = computeAppService;
         }
@@ -30,6 +30,21 @@ namespace PeikkoPrecastWallDesigner.Controllers
 			try
 			{
 				var res = await _compAppService.ComputeLayerLoadsAsync(model);
+				return Ok(res);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { Error = "An unexpected error occurred.", Message = ex.Message });
+			}
+		}
+		[HttpPost("background/loads")]
+		public async Task<IActionResult> ComputeLayerLoadsBackground([FromBody] LayersDto model)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+			try
+			{
+				var res = await _compAppService.ComputeLayerLoadsBackgroundAsync(model);
 				return Ok(res);
 			}
 			catch (Exception ex)

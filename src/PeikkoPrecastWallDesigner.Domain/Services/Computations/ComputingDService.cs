@@ -1,9 +1,8 @@
 using PeikkoPrecastWallDesigner.Domain.Entities;
 using PeikkoPrecastWallDesigner.Domain.Enums;
 using PeikkoPrecastWallDesigner.Domain.Exceptions;
-using PeikkoPrecastWallDesigner.Domain.Services.Computations;
 
-namespace PeikkoPrecastWallDesigner.Domain.Service.Computations
+namespace PeikkoPrecastWallDesigner.Domain.Services.Computations
 {
 	/// <summary>
 	/// Computing Domain Service
@@ -24,6 +23,33 @@ namespace PeikkoPrecastWallDesigner.Domain.Service.Computations
 				throw new GeometryValidationException(
 					"Invalid hole position",
 					EGeometryValidationExceptionType.HolePositionInvalid);
+		}
+		public List<LayerLoads> ComputeLoads(Layers data)
+		{
+			double overlap;
+			LayerLoads internalLoads;
+			LayerLoads externalLoads;
+
+			if (data.Hole.Position == EHolePosition.Internal)
+			{
+				overlap = HoleOverlap(data.Hole, data.InternalLayer);
+				internalLoads = ComputeLayerLoads(data.InternalLayer, overlap);
+				externalLoads = ComputeLayerLoads(data.ExternalLayer, 0);
+			}
+			else if (data.Hole.Position == EHolePosition.External)
+			{
+				overlap = HoleOverlap(data.Hole, data.ExternalLayer);
+				internalLoads = ComputeLayerLoads(data.InternalLayer, 0);
+				externalLoads = ComputeLayerLoads(data.ExternalLayer, overlap);
+			}
+			else
+			{
+				overlap = HoleOverlap(data.Hole, data.InternalLayer);
+				internalLoads = ComputeLayerLoads(data.InternalLayer, overlap);
+				overlap = HoleOverlap(data.Hole, data.ExternalLayer);
+				externalLoads = ComputeLayerLoads(data.ExternalLayer, overlap);
+			}
+			return [internalLoads, externalLoads];
 		}
 	}
 }

@@ -14,6 +14,7 @@ variables:
   ENVIRONMENT: dev
   azureprojectname: "pwd-backend"  # This is the name of the project in Azure
   projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"  # Add project .csproj file name here
+  testProjFileName : "PeikkoPrecastWallDesigner.UnitTests/PeikkoPrecastWallDesigner.UnitTests.csproj"
   projectName: "pwd-backend"  # Add project name here
   workingDirectory: "$(System.DefaultWorkingDirectory)/src"  # Change project name according to folder structure
   buildConfiguration: "Release"
@@ -52,6 +53,14 @@ steps:
       command: "build"
       projects: "**/*.csproj"
       arguments: "--configuration $(buildConfiguration)"
+
+  # Run Unit Tests
+  - task: DotNetCoreCLI@2
+    displayName: "Run Unit Tests"
+    inputs:
+      command: "test"
+      projects: "$(workingDirectory)/$(testProjFileName)"
+      arguments: "--configuration $(buildConfiguration) --no-restore --logger:trx"
 
   # Publish Api project
   - task: DotNetCoreCLI@2

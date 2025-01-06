@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Azure.Identity;
 using Microsoft.Azure.Cosmos;
 using Azure.Messaging.ServiceBus;
-using PeikkoPrecastWallDesigner.Domain.Entities;
 using PeikkoPrecastWallDesigner.Domain.Infrastructure.External.MessageBrokers;
 using PeikkoPrecastWallDesigner.Domain.Infrastructure.Persistence.Repositories;
 using PeikkoPrecastWallDesigner.Infrastructure.External.MessageBrokers.AzureServiceBus;
@@ -27,7 +26,7 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 	
 			//services.AddKeyVault(builder);
 			services.AddCosmosDB(configuration);
-			services.AddAzureServiceBusSender<ComputingResultDto>(configuration);
+			services.AddAzureServiceBusSender<LayerLoadsComputingResultDto>(configuration, "LayerLoadsComputingQueue");
 			return (services);
 		}
 
@@ -54,10 +53,8 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 		//	return services;
 		//}
 
-		public static IServiceCollection AddAzureServiceBusSender<T>(this IServiceCollection services, IConfiguration configuration)
+		public static IServiceCollection AddAzureServiceBusSender<T>(this IServiceCollection services, IConfiguration configuration, string queueName)
 		{
-			var queueName = "ComputingQueue";
-
 			var azureServiceBusOptions = configuration.GetSection("AzureServiceBus").Get<AzureServiceBusOptions>()
 				?? throw new Exception("AzureServiceBus configuration section is missing.");
 

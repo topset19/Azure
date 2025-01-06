@@ -13,15 +13,15 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 	/// <summary>
 	/// Computing Application Service
 	/// </summary>
-	public class ComputingAService
+	public class ComputingAService : IComputingAService
 	{
 		private readonly IComputingDService _compService;
-		private readonly IMessageSender<ComputingResultDto> _messageSender;
+		private readonly IMessageSender<LayerLoadsComputingResultDto> _messageSender;
 		private readonly IComputingResultRepository _compResRepository;
 
 		public ComputingAService(
 			IComputingDService computingService,
-			IMessageSender<ComputingResultDto> messageSender,
+			IMessageSender<LayerLoadsComputingResultDto> messageSender,
 			IComputingResultRepository resultRepository)
 		{
 			_compService = computingService;
@@ -42,7 +42,7 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 					Status = "Processing",
 					CreatedAt = DateTime.UtcNow
 				};
-				var compResultDto = new ComputingResultDto
+				var compResultDto = new LayerLoadsComputingResultDto
 				{
 					Id = compResult.Id,
 					Value = JsonSerializer.Serialize(layers),
@@ -70,6 +70,62 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 				throw new Exception("An error occurred while computing layer loads.", ex);
 			}
 		}
+
+		public async Task<ComputingResultDto> ComputeLayerLoadsBackgroundAsync(LayersDto data)
+		{
+			try
+			{
+				var layers = LayersMapper.ToEntity(data);
+				_compService.GeometryValidation(layers);
+
+				var compResult = new ComputingResult
+				{
+					Id = Guid.NewGuid(),
+					Value = string.Empty,
+					Status = "Processing",
+					CreatedAt = DateTime.UtcNow
+				};
+				await _compResRepository.AddAsync(compResult);
+
+				var compResultDto = new LayerLoadsComputingResultDto
+				{
+					Id = compResult.Id,
+					Value = JsonSerializer.Serialize(layers),
+					Status = compResult.Status
+				};
+
+				_ = Task.Run(async () =>
+				{
+					try
+					{
+						await Task.Yield();
+						var computationResult = _compService.ComputeLoads(layers);
+
+						compResult.Value = JsonSerializer.Serialize(computationResult);
+						compResult.Status = "Completed";
+						await _compResRepository.UpdateAsync(compResult);
+					}
+					catch (Exception ex)
+					{
+						compResult.Status = "Failed";
+						compResult.Value = JsonSerializer.Serialize(new { Error = ex.Message });
+						await _compResRepository.UpdateAsync(compResult);
+					}
+				});
+
+				return ComputingResultMapper.ToDto(compResult);
+			}
+			catch (GeometryValidationException ex)
+			{
+				throw new Exception("Validation failed: " + ex.Message);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("An error occurred while computing layer loads.", ex);
+			}
+		}
+
+
 		public async Task<ComputingResultDto?> GetComputingResultAsync(Guid id)
 		{
 			try

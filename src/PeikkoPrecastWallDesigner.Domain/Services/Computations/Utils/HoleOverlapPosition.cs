@@ -2,7 +2,7 @@ using PeikkoPrecastWallDesigner.Domain.Entities;
 using PeikkoPrecastWallDesigner.Domain.Enums;
 using PeikkoPrecastWallDesigner.Domain.Services.Computations;
 
-namespace PeikkoPrecastWallDesigner.Domain.Service.Computations
+namespace PeikkoPrecastWallDesigner.Domain.Services.Computations
 {
 	public partial class ComputingDService : IComputingDService
 	{

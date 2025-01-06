@@ -10,13 +10,14 @@ using PeikkoPrecastWallDesigner.Domain.Entities;
 using PeikkoPrecastWallDesigner.Domain.Enums;
 using PeikkoPrecastWallDesigner.Domain.Exceptions;
 using PeikkoPrecastWallDesigner.Domain.Service.Computations;
+using PeikkoPrecastWallDesigner.Domain.Services.Computations;
 
 
 namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 {
 	public class ComputingAServiceTests
 	{
-		private readonly ComputingDService _compService;
+		private readonly IComputingDService _compService;
 
 		public ComputingAServiceTests()
 		{
