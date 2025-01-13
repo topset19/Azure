@@ -2,7 +2,7 @@ using PeikkoPrecastWallDesigner.Domain.Entities;
 
 namespace PeikkoPrecastWallDesigner.Domain.Services.Computations
 {
-	public interface IComputingDService
+	public interface IComputingDomainService
 	{
 		void GeometryValidation(Layers data);
 		List<LayerLoads> ComputeLoads(Layers data);

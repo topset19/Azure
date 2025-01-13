@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Threading.RateLimiting;
 using Azure.Identity;
 using Microsoft.AspNetCore.RateLimiting;
@@ -8,14 +9,15 @@ using PeikkoPrecastWallDesigner.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
 
-//builder.Configuration.AddAzureKeyVault(
-//	new Uri($"https://{env.ApplicationName}.vault.azure.net/"),
-//	new DefaultAzureCredential());
+
 // ----------------------------------------------------
 // SERVICES CONFIGURATION
 // ----------------------------------------------------
 var services = builder.Services;
 
+// This order should not be changed
+services.AddKeyVault(builder);
+services.AddAppSettings(builder);
 services.AddApplication(builder.Configuration);
 services.AddInfrastructure(builder);
 
@@ -41,7 +43,7 @@ builder.Services.AddRateLimiter(options =>
 // ----------------------------------------------------
 var app = builder.Build();
 
-// app.UseHttpsRedirection();
+ app.UseHttpsRedirection();
 // app.UseAuthentication();
 // app.UseAuthorization();
 

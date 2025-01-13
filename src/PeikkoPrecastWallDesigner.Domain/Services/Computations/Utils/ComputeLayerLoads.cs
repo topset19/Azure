@@ -3,7 +3,7 @@ using PeikkoPrecastWallDesigner.Domain.Services.Computations;
 
 namespace PeikkoPrecastWallDesigner.Domain.Services.Computations
 {
-	public partial class ComputingDService : IComputingDService
+	public partial class ComputingDomainService : IComputingDomainService
 	{
 		public LayerLoads ComputeLayerLoads(Layer layer, double holeArea)
 		{

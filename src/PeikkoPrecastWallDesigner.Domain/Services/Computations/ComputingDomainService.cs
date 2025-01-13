@@ -7,7 +7,7 @@ namespace PeikkoPrecastWallDesigner.Domain.Services.Computations
 	/// <summary>
 	/// Computing Domain Service
 	/// </summary>
-	public partial class ComputingDService : IComputingDService
+	public partial class ComputingDomainService : IComputingDomainService
 	{
 		public void GeometryValidation(Layers data)
 		{

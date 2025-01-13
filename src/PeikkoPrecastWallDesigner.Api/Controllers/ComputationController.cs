@@ -9,9 +9,9 @@ namespace PeikkoPrecastWallDesigner.Controllers
     [ApiController]
     public class ComputationController : ControllerBase
     {
-        private readonly IComputingAService _compAppService;
+        private readonly IComputingApplicationService _compAppService;
 
-        public ComputationController(IComputingAService computeAppService)
+        public ComputationController(IComputingApplicationService computeAppService)
         {
 			_compAppService = computeAppService;
         }

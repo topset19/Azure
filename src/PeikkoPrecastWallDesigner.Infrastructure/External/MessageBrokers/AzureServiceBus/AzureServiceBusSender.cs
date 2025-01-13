@@ -16,7 +16,7 @@ namespace PeikkoPrecastWallDesigner.Infrastructure.External.MessageBrokers.Azure
 			_queueName = queueName;
 		}
 
-		public async Task SendMessageAsync(T message)
+		public async Task SendMessageAsync(T message, CancellationToken cancellationToken = default)
 		{
 			try
 			{
@@ -26,7 +26,7 @@ namespace PeikkoPrecastWallDesigner.Infrastructure.External.MessageBrokers.Azure
 				{
 					Data = message,
 				})));
-				await sender.SendMessageAsync(serviceBusMessage);
+				await sender.SendMessageAsync(serviceBusMessage, cancellationToken);
 			}
 			catch (ServiceBusException ex)
 			{

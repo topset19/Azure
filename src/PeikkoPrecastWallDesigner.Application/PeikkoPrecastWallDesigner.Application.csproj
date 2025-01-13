@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PeikkoPrecastWallDesigner.Domain\PeikkoPrecastWallDesigner.Domain.csproj" />
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

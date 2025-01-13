@@ -13,15 +13,15 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 	/// <summary>
 	/// Computing Application Service
 	/// </summary>
-	public class ComputingAService : IComputingAService
+	public class ComputingApplicationService : IComputingApplicationService
 	{
-		private readonly IComputingDService _compService;
-		private readonly IMessageSender<LayerLoadsComputingResultDto> _messageSender;
+		private readonly IComputingDomainService _compService;
+		private readonly IMessageSender<LayerLoadComputingResultDto> _messageSender;
 		private readonly IComputingResultRepository _compResRepository;
 
-		public ComputingAService(
-			IComputingDService computingService,
-			IMessageSender<LayerLoadsComputingResultDto> messageSender,
+		public ComputingApplicationService(
+			IComputingDomainService computingService,
+			IMessageSender<LayerLoadComputingResultDto> messageSender,
 			IComputingResultRepository resultRepository)
 		{
 			_compService = computingService;
@@ -42,7 +42,7 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 					Status = "Processing",
 					CreatedAt = DateTime.UtcNow
 				};
-				var compResultDto = new LayerLoadsComputingResultDto
+				var compResultDto = new LayerLoadComputingResultDto
 				{
 					Id = compResult.Id,
 					Value = JsonSerializer.Serialize(layers),
@@ -87,7 +87,7 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 				};
 				await _compResRepository.AddAsync(compResult);
 
-				var compResultDto = new LayerLoadsComputingResultDto
+				var compResultDto = new LayerLoadComputingResultDto
 				{
 					Id = compResult.Id,
 					Value = JsonSerializer.Serialize(layers),

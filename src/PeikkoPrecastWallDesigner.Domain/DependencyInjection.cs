@@ -8,7 +8,7 @@ namespace PeikkoPrecastWallDesigner.Domain
 	{
 		public static IServiceCollection AddDomain(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddScoped<IComputingDService, ComputingDService>(); 
+			services.AddScoped<IComputingDomainService, ComputingDomainService>(); 
 			return (services);
 		}
 	}

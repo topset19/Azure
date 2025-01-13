@@ -2,6 +2,6 @@
 {
 	public interface IMessageSender<T>
 	{
-		Task SendMessageAsync(T message);
+		Task SendMessageAsync(T message, CancellationToken cancellationToken = default);
 	}
 }

@@ -13,13 +13,13 @@ using PeikkoPrecastWallDesigner.Domain.Services.Computations;
 
 namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 {
-	public class ComputingAServiceTests
+	public class ComputingDomainServiceTests
 	{
 		private readonly IComputingDService _compService;
 
-		public ComputingAServiceTests()
+		public ComputingDomainServiceTests()
 		{
-			_compService = new ComputingDService();
+			_compService = new ComputingDomainService();
 		}
 
 		[Fact]
@@ -147,7 +147,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 					Position = "Both"
 				}
 			};
-			
+
 
 			var exception = Assert.Throws<GeometryValidationException>(() =>
 			{

@@ -3,7 +3,7 @@ using PeikkoPrecastWallDesigner.Application.Computations.DTOs;
 
 namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 {
-	public interface IComputingAService
+	public interface IComputingApplicationService
 	{
 		Task<ComputingResultDto> ComputeLayerLoadsAsync(LayersDto data);
 		Task<ComputingResultDto> ComputeLayerLoadsBackgroundAsync(LayersDto data);

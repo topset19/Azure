@@ -10,7 +10,7 @@ namespace PeikkoPrecastWallDesigner.Application
 		public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDomain(configuration);
-			services.AddScoped<IComputingAService,ComputingAService>();
+			services.AddScoped<IComputingApplicationService,ComputingApplicationService>();
 			return (services);
 		}
 	}
