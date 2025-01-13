@@ -16,20 +16,26 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 			this IServiceCollection services,
 			WebApplicationBuilder builder)
 		{
-			var keyVaultUrl = builder.Configuration["KeyVaultURL"]
+			try
+			{
+				var keyVaultUrl = builder.Configuration["KeyVaultURL"]
 				?? throw new Exception("KeyVault URL is missing from the configuration.");
 
-			var azureCredentials = new DefaultAzureCredential();
-
-			builder.Configuration.AddAzureKeyVault(
-				new Uri(keyVaultUrl),
-				azureCredentials,
-				new Azure.Extensions.AspNetCore.Configuration.Secrets.AzureKeyVaultConfigurationOptions()
-				{
-					ReloadInterval = TimeSpan.FromMinutes(5)
-				}
-			);
-
+				var azureCredentials = new DefaultAzureCredential();
+				builder.Configuration.AddAzureKeyVault(
+					new Uri(keyVaultUrl),
+					azureCredentials,
+					new Azure.Extensions.AspNetCore.Configuration.Secrets.AzureKeyVaultConfigurationOptions()
+					{
+						ReloadInterval = TimeSpan.FromMinutes(5)
+					});
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Failed to configure Azure Key Vault: {ex}");
+				throw;
+			}
+			
 			return (services);
 		}
 	}
