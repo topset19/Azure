@@ -15,7 +15,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 {
 	public class ComputingDomainServiceTests
 	{
-		private readonly IComputingDService _compService;
+		private readonly IComputingDomainService _compService;
 
 		public ComputingDomainServiceTests()
 		{
