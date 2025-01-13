@@ -88,5 +88,5 @@ steps:
       appType: "webApp"
       WebAppName: "$(webAppName)"
       packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
-	  enableCustomApplicationSetting: true
+      enableCustomApplicationSetting: true
       RemoveAdditionalFilesFlag: true 
