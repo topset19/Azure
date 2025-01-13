@@ -5,12 +5,6 @@
 		public string Endpoint { get; set; } = string.Empty;
 		public string Key { get; set; } = string.Empty;
 		public List<CosmosDatabaseOptions> Databases { get; set; } = new();
-		//public CosmosOptions(string endpoint, string key)
-		//{
-		//	Endpoint = endpoint;
-		//	Key = key;
-		//	Databases = new();
-		//}
 	}
 
 	public class CosmosDatabaseOptions
