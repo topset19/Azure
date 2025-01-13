@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime;
-using System.Text.Json;
+
 
 namespace PeikkoPrecastWallDesigner.Infrastructure
 {
