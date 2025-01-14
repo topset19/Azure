@@ -14,9 +14,6 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 	{
 		public static IServiceCollection AddInfrastructure(this IServiceCollection services, WebApplicationBuilder builder)
 		{
-			Console.WriteLine("---------------------------------------------------");
-			Console.WriteLine("Started adding Infrastructure Layer Config");
-			Console.WriteLine("---------------------------------------------------");
 			var configuration = builder.Configuration;
 			var appSettings = builder.Services.BuildServiceProvider().GetRequiredService<AppSettings>();
 

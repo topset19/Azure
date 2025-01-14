@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB.Repositories
 {
-	public abstract class CosmosRepository<TEntity, Tid> : ICosmosRepository<TEntity, Tid>
+	public class CosmosRepository<TEntity, Tid> : ICosmosRepository<TEntity, Tid>
 		where TEntity : Entity<Tid>
 	{
 		protected readonly Container _container;

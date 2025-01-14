@@ -1,4 +1,7 @@
-﻿namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB
+﻿using PeikkoPrecastWallDesigner.Domain.Infrastructure.Persistence.Repositories;
+using PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB.Repositories;
+
+namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB
 {
 	public class CosmosOptions
 	{

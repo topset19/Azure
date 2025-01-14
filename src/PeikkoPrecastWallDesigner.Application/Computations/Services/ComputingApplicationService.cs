@@ -17,12 +17,12 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 	{
 		private readonly IComputingDomainService _compService;
 		private readonly IMessageSender<LayerLoadComputingResultDto> _messageSender;
-		private readonly IComputingResultRepository _compResRepository;
+		private readonly ICosmosRepository<ComputingResult, Guid> _compResRepository;
 
 		public ComputingApplicationService(
 			IComputingDomainService computingService,
 			IMessageSender<LayerLoadComputingResultDto> messageSender,
-			IComputingResultRepository resultRepository)
+			ICosmosRepository<ComputingResult, Guid> resultRepository)
 		{
 			_compService = computingService;
 			_messageSender = messageSender;

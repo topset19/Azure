@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Azure.Cosmos;
 using PeikkoPrecastWallDesigner.Domain.Infrastructure.Persistence.Repositories;
 using PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB.Repositories;
+using PeikkoPrecastWallDesigner.Domain.Entities;
 
 namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB
 {
@@ -23,12 +24,6 @@ namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB
 			string dbKeyKV
 		)
 		{
-			Console.WriteLine("---------------------------------------------------");
-			Console.WriteLine("Started adding CosmosDB Config");
-			Console.WriteLine($"dbEndpointKV: {dbEndpointKV}");
-			Console.WriteLine($"dbKeyKV: {dbKeyKV}");
-			Console.WriteLine("---------------------------------------------------");
-
 			// Fetching secrets from Key Vault
 			var cosmosDbEndpoint = configuration[dbEndpointKV]
 				?? throw new Exception("Cosmos DB endpoint is missing in Key Vault.");
@@ -48,33 +43,49 @@ namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB
 					{
 						PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
 					}
-				});
-			foreach (var databaseConfig in options.Databases)
-			{
-				var database = cosmosClient.GetDatabase(databaseConfig.DatabaseName)
-					?? throw new Exception($"CosmosDB: Cannot find `{databaseConfig.DatabaseName}` database.");
-				foreach (var containerConfig in databaseConfig.Containers)
-				{
-					var container = database.GetContainer(containerConfig.ContainerName)
-						?? throw new Exception($"CosmosDB: Cannot find `{containerConfig.ContainerName}` container in database `{databaseConfig.DatabaseName}`.");
-					services.AddCosmosDbRepositories(container, containerConfig.PartitionKey); // change this once having multiple containers
 				}
-			}
+			);
+
+			services.AddCosmosDbRepositories<ComputingResult, Guid>(options, cosmosClient, "ComputingResults", "LayerLoads");
+
 			services.AddSingleton(cosmosClient);
 			return (services);
 		}
 
-		private static IServiceCollection AddCosmosDbRepositories(
+		private static IServiceCollection AddCosmosDbRepositories<TEntity, TId>(
 			this IServiceCollection services,
-			Container container,
-			string partitionKey
-			)
+			CosmosOptions options,
+			CosmosClient cosmosClient,
+			string databaseName,
+			string containerName
+		)
+			where TEntity : Entity<TId>
 		{
-			services.AddScoped<IComputingResultRepository>(sp =>
+			bool found = false;
+
+			foreach (var databaseConfig in options.Databases)
 			{
-				return new ComputingResultRepository(container, partitionKey);
-			});
-			return (services);
+				if (databaseConfig.DatabaseName == databaseName)
+				{
+					var database = cosmosClient.GetDatabase(databaseConfig.DatabaseName)
+						?? throw new Exception($"CosmosDB: Cannot find `{databaseConfig.DatabaseName}` database.");
+					foreach (var containerConfig in databaseConfig.Containers)
+					{
+						if (containerConfig.ContainerName == containerName)
+						{
+							var container = database.GetContainer(containerConfig.ContainerName)
+								?? throw new Exception($"CosmosDB: Cannot find `{containerConfig.ContainerName}` container in database `{databaseConfig.DatabaseName}`.");
+							var containerPartitionKey = containerConfig.PartitionKey;
+
+							services.AddScoped<ICosmosRepository<TEntity, TId>>(sp => new CosmosRepository<TEntity, TId>(container, containerPartitionKey));
+							found = true;
+						}
+					}
+				}
+			}
+			if (!found)
+				throw new Exception($"AddCosmosDB: AddCosmosDbRepositories: Failed to find {databaseName} database, {containerName} container.");
+			return services;
 		}
 	}
 }
