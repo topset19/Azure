@@ -35,6 +35,7 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 			{
 				var layers = LayersMapper.ToEntity(data);
 				_compService.GeometryValidation(layers);
+
 				var compResult = new ComputingResult
 				{
 					Id = Guid.NewGuid(),
@@ -42,6 +43,9 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 					Status = "Processing",
 					CreatedAt = DateTime.UtcNow
 				};
+				await _compResRepository.AddAsync(compResult);
+
+
 				var compResultDto = new LayerLoadComputingResultDto
 				{
 					Id = compResult.Id,
@@ -153,7 +157,7 @@ namespace PeikkoPrecastWallDesigner.Application.Computations.Services
 					{"/value", dto.Value},
 					{"/status", dto.Status}
 				};
-				
+
 				await _compResRepository.PatchAsync(dto.Id, patchOperationList);
 				return (true);
 			}
