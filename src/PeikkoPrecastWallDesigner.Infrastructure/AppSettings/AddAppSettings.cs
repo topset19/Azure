@@ -11,6 +11,9 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 		{
 			try
 			{
+				Console.WriteLine("---------------------------------------------------");
+				Console.WriteLine("Started adding App Setting Config");
+				Console.WriteLine("---------------------------------------------------");
 				var appSettings = new AppSettings();
 
 				builder.Configuration.Bind(appSettings); // partially binding, some secrets must be fetched from Key Vault

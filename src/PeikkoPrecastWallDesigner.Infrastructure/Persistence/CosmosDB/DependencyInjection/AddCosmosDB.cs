@@ -23,6 +23,12 @@ namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB
 			string dbKeyKV
 		)
 		{
+			Console.WriteLine("---------------------------------------------------");
+			Console.WriteLine("Started adding CosmosDB Config");
+			Console.WriteLine($"dbEndpointKV: {dbEndpointKV}");
+			Console.WriteLine($"dbKeyKV: {dbKeyKV}");
+			Console.WriteLine("---------------------------------------------------");
+
 			// Fetching secrets from Key Vault
 			var cosmosDbEndpoint = configuration[dbEndpointKV]
 				?? throw new Exception("Cosmos DB endpoint is missing in Key Vault.");
@@ -51,7 +57,7 @@ namespace PeikkoPrecastWallDesigner.Infrastructure.Persistence.CosmosDB
 				{
 					var container = database.GetContainer(containerConfig.ContainerName)
 						?? throw new Exception($"CosmosDB: Cannot find `{containerConfig.ContainerName}` container in database `{databaseConfig.DatabaseName}`.");
-					services.AddCosmosDbRepositories(container, containerConfig.PartitionKey);
+					services.AddCosmosDbRepositories(container, containerConfig.PartitionKey); // change this once having multiple containers
 				}
 			}
 			services.AddSingleton(cosmosClient);

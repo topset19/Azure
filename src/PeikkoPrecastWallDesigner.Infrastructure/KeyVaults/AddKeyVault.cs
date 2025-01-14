@@ -18,9 +18,9 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 		{
 			try
 			{
-				Console.WriteLine("--------------------------------");
+				Console.WriteLine("---------------------------------------------------");
 				Console.WriteLine("Started adding Key Vault Config");
-				Console.WriteLine("--------------------------------");
+				Console.WriteLine("---------------------------------------------------");
 				var keyVaultUrl = builder.Configuration["KeyVaultURL"]
 					?? throw new Exception("KeyVault URL is missing from the configuration.");
 

@@ -14,6 +14,9 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 	{
 		public static IServiceCollection AddInfrastructure(this IServiceCollection services, WebApplicationBuilder builder)
 		{
+			Console.WriteLine("---------------------------------------------------");
+			Console.WriteLine("Started adding Infrastructure Layer Config");
+			Console.WriteLine("---------------------------------------------------");
 			var configuration = builder.Configuration;
 			var appSettings = builder.Services.BuildServiceProvider().GetRequiredService<AppSettings>();
 
@@ -22,7 +25,7 @@ namespace PeikkoPrecastWallDesigner.Infrastructure
 			services.AddMessageBusSender<LayerLoadComputingResultDto>(
 				configuration,
 				appSettings.MessageBrokers,
-				"pwd-bus-connection-string"
+				"pwd-bus-backend-connection-string"
 			);
 
 			return (services);
