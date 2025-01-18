@@ -95,7 +95,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: "Publish Build Artifacts"
       inputs:
-        PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip"
+        PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureprojectname)_$(ENVIRONMENT)_$(Build.BuildNumber)"
         ArtifactName: "$(azureProjectName)_LatestBuild"
         publishLocation: "Container"
 
