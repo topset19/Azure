@@ -1,92 +1,128 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-  - main  # - main to trigger on commits to main branch
+  - main  # Trigger pipeline on commits to the main branch
 
 pool:
   vmImage: "windows-latest"
 
-# Working Directory
 variables:
   ENVIRONMENT: dev
-  azureprojectname: "pwd-backend"  # This is the name of the project in Azure
-  projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"  # Add project .csproj file name here
-  testProjFileName : "PeikkoPrecastWallDesigner.UnitTests/PeikkoPrecastWallDesigner.UnitTests.csproj"
-  projectName: "pwd-backend"  # Add project name here
-  workingDirectory: "$(System.DefaultWorkingDirectory)/src"  # Change project name according to folder structure
+  azureProjectName: "pwd-backend"  # Azure project name
+  projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"  # Project .csproj file path
+  testProjFileName: "PeikkoPrecastWallDesigner.UnitTests/PeikkoPrecastWallDesigner.UnitTests.csproj"  # Unit test project path
+  workingDirectory: "$(System.DefaultWorkingDirectory)/src"  # Source directory
   buildConfiguration: "Release"
-  name: $(Date:yyyyMMdd)$(Rev:.r)
   resourceGroupName: "$(azureProjectName)-$(ENVIRONMENT)-rg"
   webAppName: "$(azureProjectName)-$(ENVIRONMENT)-webapp"
 
-steps:
-  # List the contents of the working directory
-  - script: dir "$(System.DefaultWorkingDirectory)"
-    displayName: "List files in working directory"
+stages:
+- stage: Initialize
+  displayName: Initialize Stage
+  jobs:
+  - job: ListFiles
+    displayName: List Working Directory
+    steps:
+    - script: dir "$(System.DefaultWorkingDirectory)"
+      displayName: "List files in working directory"
 
-  # Install .NET SDK
-  - task: UseDotNet@2
-    displayName: 'Install .NET SDK 9'
-    inputs:
-      packageType: 'sdk'
-      version: '9.x'
-      installationPath: $(Agent.ToolsDirectory)/dotnet
-      arguments: "--verbosity detailed"
-      includePreviewVersions: true
+- stage: Install
+  displayName: Install Dependencies
+  jobs:
+  - job: InstallDotNet
+    displayName: Install .NET SDK
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK 9'
+      inputs:
+        packageType: 'sdk'
+        version: '9.x'
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+        arguments: "--verbosity detailed"
+        includePreviewVersions: true
 
-  # Restore NuGet Packages
-  - task: DotNetCoreCLI@2
-    displayName: "dotnet restore"
-    inputs:
-      command: "restore"
-      projects: "**/*.csproj"
-      feedsToUse: "select"
-    # vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"  # Uncomment if using a specific feed
+- stage: Restore
+  displayName: Restore Packages
+  jobs:
+  - job: RestorePackages
+    displayName: Restore NuGet Packages
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "dotnet restore"
+      inputs:
+        command: "restore"
+        projects: "**/*.csproj"
+        feedsToUse: "select"
+		# vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"  # Uncomment if using a specific feed
 
-  # Build All Projects
-  - task: DotNetCoreCLI@2
-    displayName: "Build All Projects"
-    inputs:
-      command: "build"
-      projects: "**/*.csproj"
-      arguments: "--configuration $(buildConfiguration)"
+- stage: Build
+  displayName: Build Projects
+  dependsOn: Restore
+  jobs:
+  - job: BuildProjects
+    displayName: Build All Projects
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Build All Projects"
+      inputs:
+        command: "build"
+        projects: "**/*.csproj"
+        arguments: "--configuration $(buildConfiguration)"
 
-  # Run Unit Tests
-  - task: DotNetCoreCLI@2
-    displayName: "Run Unit Tests"
-    inputs:
-      command: "test"
-      projects: "$(workingDirectory)/$(testProjFileName)"
-      arguments: "--configuration $(buildConfiguration) --no-restore --logger:trx"
+- stage: Test
+  displayName: Run Unit Tests
+  dependsOn: Build
+  jobs:
+  - job: RunTests
+    displayName: Execute Unit Tests
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Run Unit Tests"
+      inputs:
+        command: "test"
+        projects: "$(workingDirectory)/$(testProjFileName)"
+        arguments: "--configuration $(buildConfiguration) --no-restore --logger:trx"
 
-  # Publish Api project
-  - task: DotNetCoreCLI@2
-    inputs:
+- stage: Publish
+  displayName: Publish Artifacts
+  dependsOn: Test
+  jobs:
+  - job: PublishApi
+    displayName: Publish API Project
+    steps:
+    - task: DotNetCoreCLI@2
       displayName: "Publish"
-      command: "publish"
-      publishWebProjects: false
-      projects: "$(workingDirectory)/$(projFileName)"
-      arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureprojectname)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed --no-restore"
+      inputs:
+        command: "publish"
+        publishWebProjects: false
+        projects: "$(workingDirectory)/$(projFileName)"
+        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed --no-restore"
 
-  # Publish Build Artifacts
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureprojectname)_$(ENVIRONMENT)_$(Build.BuildNumber)"
-      ArtifactName: "$(azureprojectname)_LatestBuild"
-      publishLocation: "Container"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Build Artifacts"
+      inputs:
+        PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)"
+        ArtifactName: "$(azureProjectName)_LatestBuild"
+        publishLocation: "Container"
 
-  # Deploy to Azure WebApp
-  - task: AzureRmWebAppDeployment@4
-    inputs:
-      ConnectionType: "AzureRM"
-      azureSubscription: "Peikko Services Azure Connection"
-      enableCustomDeployment: true
-      DeploymentType: "zipDeploy"
-      appType: "webApp"
-      WebAppName: "$(webAppName)"
-      packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
-      enableCustomApplicationSetting: true
-      RemoveAdditionalFilesFlag: true 
+- stage: Deploy
+  displayName: Deploy to Azure WebApp
+  dependsOn: Publish
+  jobs:
+  - deployment: DeployWebApp
+    displayName: Deploy to Azure
+    environment: "$(ENVIRONMENT)"
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureRmWebAppDeployment@4
+            displayName: "Deploy to Azure WebApp"
+            inputs:
+              ConnectionType: "AzureRM"
+              azureSubscription: "Peikko Services Azure Connection"
+              enableCustomDeployment: true
+              DeploymentType: "zipDeploy"
+              appType: "webApp"
+              WebAppName: "$(webAppName)"
+              packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
+              enableCustomApplicationSetting: true
+              RemoveAdditionalFilesFlag: true
