@@ -1,15 +1,15 @@
 trigger:
-  - main  # Trigger pipeline on commits to the main branch
+  - main
 
 pool:
   vmImage: "windows-latest"
 
 variables:
   ENVIRONMENT: dev
-  azureProjectName: "pwd-backend"  # Azure project name
-  projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"  # Project .csproj file path
-  testProjFileName: "PeikkoPrecastWallDesigner.UnitTests/PeikkoPrecastWallDesigner.UnitTests.csproj"  # Unit test project path
-  workingDirectory: "$(System.DefaultWorkingDirectory)/src"  # Source directory
+  azureProjectName: "pwd-backend"
+  projFileName: "PeikkoPrecastWallDesigner.Api/PeikkoPrecastWallDesigner.Api.csproj"
+  testProjFileName: "PeikkoPrecastWallDesigner.UnitTests/PeikkoPrecastWallDesigner.UnitTests.csproj"
+  workingDirectory: "$(System.DefaultWorkingDirectory)/src"
   buildConfiguration: "Release"
   resourceGroupName: "$(azureProjectName)-$(ENVIRONMENT)-rg"
   webAppName: "$(azureProjectName)-$(ENVIRONMENT)-webapp"
@@ -47,7 +47,7 @@ stages:
         command: "restore"
         projects: "**/*.csproj"
         feedsToUse: "select"
-        # vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"  # Uncomment if using a specific feed
+        # vstsFeed: ""  # Add your feed GUID if required
 
 - stage: Build
   displayName: Build
@@ -75,7 +75,7 @@ stages:
       inputs:
         command: "test"
         projects: "$(workingDirectory)/$(testProjFileName)"
-        arguments: "--configuration $(buildConfiguration) --no-restore --logger:trx"
+        arguments: "--configuration $(buildConfiguration) --logger:trx"
 
 - stage: Publish
   displayName: Publish
@@ -90,7 +90,7 @@ stages:
         command: "publish"
         publishWebProjects: false
         projects: "$(workingDirectory)/$(projFileName)"
-        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed --no-restore"
+        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed"
 
     - task: PublishBuildArtifacts@1
       displayName: "Publish Build Artifacts"
