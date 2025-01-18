@@ -76,50 +76,51 @@ stages:
         command: "test"
         projects: "$(workingDirectory)/$(testProjFileName)"
         arguments: "--configuration $(buildConfiguration) --logger:trx"
+
 - stage: Deploy
-displayName: Publish and Deploy
-dependsOn: Test
-jobs:
-- job: PublishAndDeploy
-  displayName: "Publish and Deploy to Azure"
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: "Publish .NET Project"
-    inputs:
-      command: "publish"
-      publishWebProjects: false
-      projects: "$(workingDirectory)/$(projFileName)"
-      arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed"
+  displayName: Publish and Deploy
+  dependsOn: Test
+  jobs:
+  - job: PublishAndDeploy
+    displayName: "Publish and Deploy to Azure"
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: "Publish .NET Project"
+      inputs:
+        command: "publish"
+        publishWebProjects: false
+        projects: "$(workingDirectory)/$(projFileName)"
+        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed"
 
-  - script: |
-      cd $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)
-      zip -r $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip .
-    displayName: "Create ZIP from Published Files"
+    - script: |
+        cd $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)
+        zip -r $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip .
+      displayName: "Create ZIP from Published Files"
 
-  - task: PublishBuildArtifacts@1
-    displayName: "Publish Build Artifacts"
-    inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip"
-      ArtifactName: "$(azureProjectName)_LatestBuild"
-      publishLocation: "Container"
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Build Artifacts"
+      inputs:
+        PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip"
+        ArtifactName: "$(azureProjectName)_LatestBuild"
+        publishLocation: "Container"
 
-  - deployment: DeployWebApp
-    displayName: "Deploy to Azure"
-    environment: "$(ENVIRONMENT)"
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            displayName: "Deploy to Azure WebApp"
-            inputs:
-              ConnectionType: "AzureRM"
-              azureSubscription: "Peikko Services Azure Connection"
-              enableCustomDeployment: true
-              DeploymentType: "zipDeploy"
-              appType: "webApp"
-              WebAppName: "$(webAppName)"
-              # packageForLinux: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip"
-              packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
-              enableCustomApplicationSetting: true
-              RemoveAdditionalFilesFlag: true
+    - deployment: DeployWebApp
+      displayName: "Deploy to Azure"
+      environment: "$(ENVIRONMENT)"
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: AzureRmWebAppDeployment@4
+              displayName: "Deploy to Azure WebApp"
+              inputs:
+                ConnectionType: "AzureRM"
+                azureSubscription: "Peikko Services Azure Connection"
+                enableCustomDeployment: true
+                DeploymentType: "zipDeploy"
+                appType: "webApp"
+                WebAppName: "$(webAppName)"
+                # packageForLinux: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip"
+                packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
+                enableCustomApplicationSetting: true
+                RemoveAdditionalFilesFlag: true
