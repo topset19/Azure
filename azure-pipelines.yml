@@ -77,32 +77,27 @@ stages:
         projects: "$(workingDirectory)/$(testProjFileName)"
         arguments: "--configuration $(buildConfiguration) --logger:trx"
 
-- stage: Publish
-  displayName: Publish
-  dependsOn: Test
-  jobs:
-  - job: PublishBackend
-    displayName: Publish Backend Project
-    steps:
-    - task: DotNetCoreCLI@2
-      displayName: "Publish"
-      inputs:
-        command: "publish"
-        publishWebProjects: false
-        projects: "$(workingDirectory)/$(projFileName)"
-        arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed"
-
-    - task: PublishBuildArtifacts@1
-      displayName: "Publish Build Artifacts"
-      inputs:
-        PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)"
-        ArtifactName: "$(azureProjectName)_LatestBuild"
-        publishLocation: "Container"
-
 - stage: Deploy
   displayName: Deploy to Azure WebApp
   dependsOn: Publish
   jobs:
+  - job: PublishBackend
+  displayName: Publish Backend Project
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: "Publish"
+    inputs:
+      command: "publish"
+      publishWebProjects: false
+      projects: "$(workingDirectory)/$(projFileName)"
+      arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed"
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Build Artifacts"
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)"
+      ArtifactName: "$(azureProjectName)_LatestBuild"
+      publishLocation: "Container"
   - deployment: DeployWebApp
     displayName: Deploy to Azure
     environment: "$(ENVIRONMENT)"
@@ -110,8 +105,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: dir "$(Build.ArtifactStagingDirectory)"
-            displayName: "List files in Build Artifact Directory"
           - task: AzureRmWebAppDeployment@4
             displayName: "Deploy to Azure WebApp"
             inputs:
@@ -121,6 +114,6 @@ stages:
               DeploymentType: "zipDeploy"
               appType: "webApp"
               WebAppName: "$(webAppName)"
-              packageForLinux: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)/*.zip"
+              packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
               enableCustomApplicationSetting: true
               RemoveAdditionalFilesFlag: true
