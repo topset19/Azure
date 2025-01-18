@@ -16,17 +16,13 @@ variables:
 
 stages:
 - stage: Initialize
-  displayName: Initialize Stage
+  displayName: Initialization
   jobs:
   - job: ListFiles
     displayName: List Working Directory
     steps:
     - script: dir "$(System.DefaultWorkingDirectory)"
       displayName: "List files in working directory"
-
-- stage: Install
-  displayName: Install Dependencies
-  jobs:
   - job: InstallDotNet
     displayName: Install .NET SDK
     steps:
@@ -54,7 +50,7 @@ stages:
         # vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"  # Uncomment if using a specific feed
 
 - stage: Build
-  displayName: Build Projects
+  displayName: Build
   dependsOn: Restore
   jobs:
   - job: BuildProjects
@@ -68,11 +64,11 @@ stages:
         arguments: "--configuration $(buildConfiguration)"
 
 - stage: Test
-  displayName: Run Unit Tests
+  displayName: Test
   dependsOn: Build
   jobs:
   - job: RunTests
-    displayName: Execute Unit Tests
+    displayName: Unit Tests
     steps:
     - task: DotNetCoreCLI@2
       displayName: "Run Unit Tests"
@@ -82,11 +78,11 @@ stages:
         arguments: "--configuration $(buildConfiguration) --no-restore --logger:trx"
 
 - stage: Publish
-  displayName: Publish Artifacts
+  displayName: Publish
   dependsOn: Test
   jobs:
-  - job: PublishApi
-    displayName: Publish API Project
+  - job: PublishBackend
+    displayName: Publish Backend Project
     steps:
     - task: DotNetCoreCLI@2
       displayName: "Publish"
