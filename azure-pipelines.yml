@@ -124,5 +124,3 @@ stages:
               packageForLinux: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)/*.zip"
               enableCustomApplicationSetting: true
               RemoveAdditionalFilesFlag: true
-      
-	  
