@@ -78,11 +78,9 @@ stages:
         arguments: "--configuration $(buildConfiguration) --logger:trx"
 
 - stage: Deploy
-  displayName: Deploy to Azure WebApp
-  dependsOn: Publish
+  displayName: Publish and Deploy
+  dependsOn: Test
   jobs:
-  - job: PublishBackend
-  displayName: Publish Backend Project
   steps:
   - task: DotNetCoreCLI@2
     displayName: "Publish"
