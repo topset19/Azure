@@ -100,13 +100,14 @@ stages:
         publishLocation: "Container"
 
     - task: AzureRmWebAppDeployment@4
-    inputs:
-      ConnectionType: "AzureRM"
-      azureSubscription: "Peikko Services Azure Connection"
-      enableCustomDeployment: true
-      DeploymentType: "zipDeploy"
-      appType: "webApp"
-      WebAppName: "$(webAppName)"
-      packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
-      enableCustomApplicationSetting: true
-      RemoveAdditionalFilesFlag: true 
+      displayName: "Deploy to Web App"
+      inputs:
+        ConnectionType: "AzureRM"
+        azureSubscription: "Peikko Services Azure Connection"
+        enableCustomDeployment: true
+        DeploymentType: "zipDeploy"
+        appType: "webApp"
+        WebAppName: "$(webAppName)"
+        packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
+        enableCustomApplicationSetting: true
+        RemoveAdditionalFilesFlag: true 
