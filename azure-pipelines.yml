@@ -51,7 +51,7 @@ stages:
         command: "restore"
         projects: "**/*.csproj"
         feedsToUse: "select"
-		# vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"  # Uncomment if using a specific feed
+        # vstsFeed: "90811742-70fc-48cf-a2c2-ae26d6e63ac6"  # Uncomment if using a specific feed
 
 - stage: Build
   displayName: Build Projects
