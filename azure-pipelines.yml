@@ -76,28 +76,35 @@ stages:
         command: "test"
         projects: "$(workingDirectory)/$(testProjFileName)"
         arguments: "--configuration $(buildConfiguration) --logger:trx"
-
 - stage: Deploy
-  displayName: Publish and Deploy
-  dependsOn: Test
-  jobs:
+displayName: Publish and Deploy
+dependsOn: Test
+jobs:
+- job: PublishAndDeploy
+  displayName: "Publish and Deploy to Azure"
   steps:
   - task: DotNetCoreCLI@2
-    displayName: "Publish"
+    displayName: "Publish .NET Project"
     inputs:
       command: "publish"
       publishWebProjects: false
       projects: "$(workingDirectory)/$(projFileName)"
       arguments: "--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber) --verbosity detailed"
 
+  - script: |
+      cd $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)
+      zip -r $(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip .
+    displayName: "Create ZIP from Published Files"
+
   - task: PublishBuildArtifacts@1
     displayName: "Publish Build Artifacts"
     inputs:
-      PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber)"
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip"
       ArtifactName: "$(azureProjectName)_LatestBuild"
       publishLocation: "Container"
+
   - deployment: DeployWebApp
-    displayName: Deploy to Azure
+    displayName: "Deploy to Azure"
     environment: "$(ENVIRONMENT)"
     strategy:
       runOnce:
@@ -112,6 +119,7 @@ stages:
               DeploymentType: "zipDeploy"
               appType: "webApp"
               WebAppName: "$(webAppName)"
+              # packageForLinux: "$(Build.ArtifactStagingDirectory)/$(azureProjectName)_$(ENVIRONMENT)_$(Build.BuildNumber).zip"
               packageForLinux: "$(Build.ArtifactStagingDirectory)/**/*.zip"
               enableCustomApplicationSetting: true
               RemoveAdditionalFilesFlag: true
