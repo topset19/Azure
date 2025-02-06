@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.OpenApi; // Miran lisäys
+using Scalar.AspNetCore;
 using System.Configuration;
 using System.Threading.RateLimiting;
 using Azure.Identity;
@@ -52,5 +53,6 @@ var app = builder.Build();
 app.MapControllers();
 
 app.MapOpenApi(); // Miran lisäys
+app.MapScalarApiReference(); // Miran lisäys
 
 app.Run();
