@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.OpenApi; // Miran lisäys
 using System.Configuration;
 using System.Threading.RateLimiting;
 using Azure.Identity;
