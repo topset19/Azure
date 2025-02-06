@@ -12,5 +12,8 @@
     <ProjectReference Include="..\PeikkoPrecastWallDesigner.Application\PeikkoPrecastWallDesigner.Application.csproj" />
 	<ProjectReference Include="..\PeikkoPrecastWallDesigner.Infrastructure\PeikkoPrecastWallDesigner.Infrastructure.csproj" />
   </ItemGroup>
+   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+	</ItemGroup>
 
 </Project>
