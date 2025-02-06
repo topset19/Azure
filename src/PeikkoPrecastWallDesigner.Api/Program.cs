@@ -20,6 +20,7 @@ services.AddKeyVault(builder);
 services.AddAppSettings(builder);
 services.AddApplication(builder.Configuration);
 services.AddInfrastructure(builder);
+services.AddOpenApi(); // Miran lisäys
 
 services.AddControllers();
 
@@ -48,5 +49,7 @@ var app = builder.Build();
 // app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapOpenApi(); // Miran lisäys
 
 app.Run();
