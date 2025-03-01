@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeikkoPrecastWallDesigner.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeikkoPrecastWallDesigner.Background", "src\PeikkoPrecastWallDesigner.Background\PeikkoPrecastWallDesigner.Background.csproj", "{AC591253-B35A-43C7-9131-285F8708899B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeikkoPrecastWallDesigner.Api.Tests", "src\PeikkoPrecastWallDesigner.Api.Tests\PeikkoPrecastWallDesigner.Api.Tests.csproj", "{E6F75D36-DFAD-4929-8BD5-C36F30C59767}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{AC591253-B35A-43C7-9131-285F8708899B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC591253-B35A-43C7-9131-285F8708899B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC591253-B35A-43C7-9131-285F8708899B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F75D36-DFAD-4929-8BD5-C36F30C59767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F75D36-DFAD-4929-8BD5-C36F30C59767}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F75D36-DFAD-4929-8BD5-C36F30C59767}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F75D36-DFAD-4929-8BD5-C36F30C59767}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +64,6 @@ Global
 		{49FFB9B5-9871-465D-A897-DD0F927812BD} = {D0F3342E-7EBA-4354-9901-FCE5CB274B90}
 		{A063DDD7-FACF-4059-8BE7-B117EB8B796E} = {D0F3342E-7EBA-4354-9901-FCE5CB274B90}
 		{AC591253-B35A-43C7-9131-285F8708899B} = {D0F3342E-7EBA-4354-9901-FCE5CB274B90}
+		{E6F75D36-DFAD-4929-8BD5-C36F30C59767} = {D0F3342E-7EBA-4354-9901-FCE5CB274B90}
 	EndGlobalSection
 EndGlobal
