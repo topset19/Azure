@@ -30,7 +30,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 			{
 				InternalLayer = new LayerDto
 				{
-					Name = "InternalLayer",
+					Name = "internalLayer",
 					X = 0,
 					Y = 0,
 					Width = 3400,
@@ -76,7 +76,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 			{
 				InternalLayer = new LayerDto
 				{
-					Name = "InternalLayer",
+					Name = "internalLayer",
 					X = 0,
 					Y = 0,
 					Width = 3400,
@@ -85,7 +85,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 				},
 				ExternalLayer = new LayerDto
 				{
-					Name = "ExternalLayer",
+					Name = "externalLayer",
 					X = -100,
 					Y = 0,
 					Width = 3600,
@@ -120,7 +120,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 			{
 				InternalLayer = new LayerDto
 				{
-					Name = "InternalLayer",
+					Name = "internalLayer",
 					X = 0,
 					Y = 0,
 					Width = 3400,
@@ -129,7 +129,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 				},
 				ExternalLayer = new LayerDto
 				{
-					Name = "ExternalLayer",
+					Name = "externalLayer",
 					X = -100,
 					Y = 0,
 					Width = 3600,
@@ -167,7 +167,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 			{
 				InternalLayer = new LayerDto
 				{
-					Name = "InternalLayer",
+					Name = "internalLayer",
 					X = X1,
 					Y = 0,
 					Width = 3400,
@@ -176,7 +176,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 				},
 				ExternalLayer = new LayerDto
 				{
-					Name = "ExternalLayer",
+					Name = "externalLayer",
 					X = X2,
 					Y = 0,
 					Width = 3600,
@@ -213,7 +213,7 @@ namespace PeikkoPrecastWallDesigner.UnitTests.Application.Computations
 			{
 				InternalLayer = new LayerDto
 				{
-					Name = "InternalLayer",
+					Name = "internalLayer",
 					X = 0,
 					Y = 0,
 					Width = 3400,
